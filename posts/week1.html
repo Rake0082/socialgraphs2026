@@ -52,11 +52,14 @@
       line-height:1.15;color:var(--yellow);text-shadow:2px 2px 0 var(--ink);margin-top:.5rem}
     .byline{font-family:"Space Grotesk";font-weight:600;font-size:.8rem;opacity:.85;margin-top:1rem}
 
-    .vs{display:flex;align-items:center;justify-content:center;gap:clamp(1rem,6vw,3rem);margin-top:1.4rem}
-    .vs .num{font-family:"Bangers",cursive;line-height:.8;text-shadow:3px 3px 0 var(--ink)}
-    .vs .big{font-size:clamp(3rem,14vw,6.5rem);color:var(--yellow)}
-    .vs .small{font-size:clamp(1.6rem,7vw,3rem);color:#fff}
-    .vs .lab{display:block;font-size:.9rem;letter-spacing:.1em;margin-top:.2rem}
+    .vs{display:flex;align-items:flex-start;justify-content:center;
+      gap:clamp(1.5rem,9vw,4.5rem);margin-top:1.6rem;flex-wrap:wrap}
+    .vs .num{display:flex;flex-direction:column;align-items:center;font-family:"Bangers",cursive}
+    .vs .fig{line-height:1;text-shadow:3px 3px 0 var(--ink)}
+    .vs .big .fig{font-size:clamp(3rem,13vw,5.5rem);color:var(--yellow)}
+    .vs .small .fig{font-size:clamp(1.9rem,8vw,3.4rem);color:#fff}
+    .vs .lab{font-family:"Space Grotesk";font-weight:700;font-size:.72rem;letter-spacing:.08em;
+      text-transform:uppercase;margin-top:.55rem;line-height:1.25;max-width:11rem;text-shadow:none}
 
     h2.kapow{font-size:clamp(1.6rem,5vw,2.4rem);margin:0 0 .3rem;color:var(--red)}
     .lede{font-size:1.05rem;margin:.2rem 0 1rem}
@@ -124,6 +127,22 @@
       transform:rotate(-9deg);text-transform:uppercase;letter-spacing:.05em;
       box-shadow:inset 0 0 0 3px rgba(229,53,43,.25)}
 
+    /* interactive friendship network */
+    .netviz-hint{text-align:center;font-weight:700;font-size:.8rem;opacity:.7;margin:.2rem 0 .4rem}
+    .netviz{border:3px solid var(--ink);border-radius:8px;background:var(--panel);
+      overflow:hidden}
+    .netviz svg{display:block;width:100%;height:auto;touch-action:pan-y}
+    .netviz .edge{stroke:var(--ink);stroke-opacity:.18}
+    .netviz .node{stroke:var(--ink);stroke-width:1.5;cursor:pointer;transition:opacity .12s}
+    .netviz .nlabel{font-family:"Bangers",cursive;fill:var(--ink);paint-order:stroke;
+      stroke:var(--panel);stroke-width:3px;pointer-events:none;transition:opacity .12s}
+    .netviz.dim .edge{stroke-opacity:.05}
+    .netviz.dim .node{opacity:.12}
+    .netviz.dim .nlabel{opacity:0}
+    .netviz .edge.lit{stroke:var(--red);stroke-opacity:.9;stroke-width:2}
+    .netviz .node.lit{opacity:1}
+    .netviz .nlabel.lit{opacity:1;fill:var(--red)}
+
     .reveal{opacity:0;transform:translateY(24px);transition:opacity .5s,transform .5s}
     .reveal.in-view{opacity:1;transform:none}
 
@@ -134,7 +153,7 @@
 <div class="zine">
 
   <nav class="comic-nav">
-    <a href="../index.html">◀ Home</a>
+    <a href="../index.html">◀ Tangled Web</a>
     <a href="week1.html">Week 1</a>
   </nav>
 
@@ -143,8 +162,8 @@
     <h1 class="kapow">Who's friends with who?</h1>
     <div class="sub">Discover the connections between the superheroes —<br>mutual links, like Rakel &amp; Jakob</div>
     <div class="vs">
-      <div class="num big">106<span class="lab">SHOUT-OUTS IN →</span></div>
-      <div class="num small">28<span class="lab">← NAME-DROPS OUT (max, ever)</span></div>
+      <div class="num big"><span class="fig">106</span><span class="lab">shout-outs in &rarr;</span></div>
+      <div class="num small"><span class="fig">28</span><span class="lab">&larr; name-drops out (max, ever)</span></div>
     </div>
     <div class="byline">Rakel Zander Ebdrup &amp; Jakob Kargo Mortensen · 02805 · Week 1</div>
   </section>
@@ -193,22 +212,16 @@
   </section>
 
   <!-- 5. MUTUALS + FRIENDSHIP NETWORK -->
-  <section class="panel reveal" style="text-align:center">
-    <h2 class="kapow">350 mutual besties</h2>
-    <p style="font-family:'Bangers',cursive;font-size:clamp(1.8rem,9vw,3.2rem);margin:.3rem 0">
-      🦸 <span style="color:var(--red)">↔</span> 🦸
-    </p>
-    <p class="lede">Keep only the links that go <em>both</em> ways and you get the real
-      friendship network: <b>207 characters, 350 friendships</b>. One dense core — the X-Men
-      corner — with Wolverine as the most-connected of all (14 mutual friends).</p>
-    <figure style="margin:1rem 0 0">
-      <img src="../assets/week1_friendships.png"
-           alt="Network drawing of the 350 mutual friendships; Wolverine, She-Hulk, Cyclops and other X-Men sit in a dense central cluster"
-           style="border:3px solid var(--ink);border-radius:8px;background:#fff">
-      <figcaption class="tiny" style="margin-top:.4rem">Dot size &amp; colour = number of mutual
-        friends. This is also why <b>1&nbsp;784 arrows</b> collapse to <b>1&nbsp;434 lines</b>
-        when you drop direction (average friend-count ≈ 9.5).</figcaption>
-    </figure>
+  <section class="panel reveal">
+    <h2 class="kapow" style="text-align:center">350 mutual besties</h2>
+    <p class="lede" style="text-align:center">Keep only the links that go <em>both</em> ways and
+      you get the real friendship network: <b>207 characters, 350 friendships</b>. One dense core
+      &mdash; the X-Men corner &mdash; with Wolverine as the most-connected of all.</p>
+    <p class="netviz-hint">👆 hover a hero to light up their friends</p>
+    <div id="friends" class="netviz"></div>
+    <p class="tiny" style="text-align:center;margin-top:.5rem">Dot size &amp; colour = number of
+      mutual friends. This is also why <b>1&nbsp;784 arrows</b> collapse to
+      <b>1&nbsp;434 lines</b> when you drop direction (average friend-count &approx; 9.5).</p>
   </section>
 
   <!-- 6. VERDICT -->
@@ -289,6 +302,113 @@ const io = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.25 });
 document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+/* ---- interactive friendship network ---- */
+function degColour(d, max) {
+  const t = Math.min(1, d / max);                 // 0..1
+  const stops = [[255,210,63], [255,122,47], [229,53,43]];  // yellow -> orange -> red
+  const seg = t < 0.5 ? 0 : 1, f = t < 0.5 ? t * 2 : (t - 0.5) * 2;
+  const a = stops[seg], b = stops[seg + 1];
+  return `rgb(${a.map((v, i) => Math.round(v + (b[i] - v) * f)).join(",")})`;
+}
+
+fetch("../assets/friendships.json").then(r => r.json()).then(data => {
+  const box = document.getElementById("friends");
+  const W = 1000, H = 780, PAD = 42;
+  const maxDeg = Math.max(...data.nodes.map(n => n.deg));
+  const px = data.nodes.map(n => ({
+    ...n,
+    sx: PAD + n.x * (W - 2 * PAD),
+    sy: PAD + (1 - n.y) * (H - 2 * PAD),
+    r: 4 + n.deg * 1.25,
+  }));
+  const adj = px.map(() => new Set());
+  data.edges.forEach(([i, j]) => { adj[i].add(j); adj[j].add(i); });
+
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+
+  const gE = document.createElementNS(NS, "g");
+  const edgeEls = data.edges.map(([i, j]) => {
+    const l = document.createElementNS(NS, "line");
+    l.setAttribute("class", "edge");
+    l.setAttribute("x1", px[i].sx); l.setAttribute("y1", px[i].sy);
+    l.setAttribute("x2", px[j].sx); l.setAttribute("y2", px[j].sy);
+    l._ends = [i, j];
+    gE.appendChild(l);
+    return l;
+  });
+  svg.appendChild(gE);
+
+  const gN = document.createElementNS(NS, "g");
+  const gL = document.createElementNS(NS, "g");
+  const nodeEls = px.map((n, i) => {
+    const c = document.createElementNS(NS, "circle");
+    c.setAttribute("class", "node");
+    c.setAttribute("cx", n.sx); c.setAttribute("cy", n.sy); c.setAttribute("r", n.r);
+    c.setAttribute("fill", degColour(n.deg, maxDeg));
+    const t = document.createElementNS(NS, "title");
+    t.textContent = `${n.name} — ${n.deg} mutual friends`;
+    c.appendChild(t);
+    const focus = () => lite(i), blur = () => lite(null);
+    c.addEventListener("mouseenter", focus);
+    c.addEventListener("mouseleave", blur);
+    c.addEventListener("click", () => lite(box.classList.contains("dim") ? null : i));
+    gN.appendChild(c);
+
+    if (n.label) {
+      const tx = document.createElementNS(NS, "text");
+      tx.setAttribute("class", "nlabel");
+      tx.setAttribute("x", n.sx + n.r + 3);
+      tx.setAttribute("y", n.sy + 4);
+      tx.setAttribute("font-size", "18");
+      tx.textContent = n.name;
+      gL.appendChild(tx);
+      n._label = tx;
+    }
+    return c;
+  });
+  svg.appendChild(gN);
+  svg.appendChild(gL);
+  box.appendChild(svg);
+
+  function lite(i) {
+    if (i == null) {
+      box.classList.remove("dim");
+      edgeEls.forEach(e => e.classList.remove("lit"));
+      nodeEls.forEach(n => n.classList.remove("lit"));
+      px.forEach(n => n._label && n._label.classList.remove("lit"));
+      const tmp = svg.querySelector(".nlabel.temp");
+      if (tmp) tmp.style.display = "none";
+      return;
+    }
+    box.classList.add("dim");
+    edgeEls.forEach(e => e.classList.toggle("lit", e._ends.includes(i)));
+    nodeEls.forEach((n, k) => n.classList.toggle("lit", k === i || adj[i].has(k)));
+    px.forEach((n, k) => {
+      if (!n._label) return;
+      n._label.classList.toggle("lit", k === i || adj[i].has(k));
+    });
+    // ensure the hovered node's name shows even if it isn't a pre-labelled hub
+    if (!px[i].label) {
+      let tmp = svg.querySelector(".nlabel.temp");
+      if (!tmp) {
+        tmp = document.createElementNS(NS, "text");
+        tmp.setAttribute("class", "nlabel temp lit");
+        tmp.setAttribute("font-size", "18");
+        gL.appendChild(tmp);
+      }
+      tmp.setAttribute("x", px[i].sx + px[i].r + 3);
+      tmp.setAttribute("y", px[i].sy + 4);
+      tmp.textContent = px[i].name;
+      tmp.style.display = "";
+    } else {
+      const tmp = svg.querySelector(".nlabel.temp");
+      if (tmp) tmp.style.display = "none";
+    }
+  }
+});
 </script>
 </body>
 </html>
