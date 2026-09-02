@@ -48,8 +48,9 @@
       padding:2.2rem 1rem;
     }
     .splash .kapow{font-size:clamp(2.4rem,8vw,4.2rem); text-shadow:4px 4px 0 var(--ink)}
-    .splash .sub{font-family:"Bangers",cursive;font-size:clamp(1.05rem,3.2vw,1.5rem);
-      line-height:1.15;color:var(--yellow);text-shadow:2px 2px 0 var(--ink);margin-top:.5rem}
+    .splash .sub{font-family:"Space Grotesk",sans-serif;font-weight:700;
+      font-size:clamp(.95rem,2.6vw,1.2rem);line-height:1.35;color:#fff;
+      text-shadow:none;margin:.7rem auto 0;max-width:34rem;letter-spacing:.01em}
     .byline{font-family:"Space Grotesk";font-weight:600;font-size:.8rem;opacity:.85;margin-top:1rem}
 
     .vs{display:flex;align-items:flex-start;justify-content:center;
@@ -61,16 +62,23 @@
     .vs .lab{font-family:"Space Grotesk";font-weight:700;font-size:.72rem;letter-spacing:.08em;
       text-transform:uppercase;margin-top:.55rem;line-height:1.25;max-width:11rem;text-shadow:none}
 
-    h2.kapow{font-size:clamp(1.6rem,5vw,2.4rem);margin:0 0 .3rem;color:var(--red)}
+    h2.kapow{font-size:clamp(1.9rem,5.5vw,2.7rem);margin:0 0 .4rem;
+      color:var(--yellow);text-shadow:3px 3px 0 var(--ink),-1px -1px 0 var(--ink)}
+    .verdict h2.kapow{color:var(--red);text-shadow:2px 2px 0 rgba(20,18,0,.25)}
     .lede{font-size:1.05rem;margin:.2rem 0 1rem}
     .tiny{font-size:.82rem;opacity:.75}
 
     /* fame meter */
-    .meter{position:relative;margin-top:1rem}
-    .ceiling{position:absolute;top:-6px;bottom:18px;width:0;border-left:3px dashed var(--red);
+    .meter{position:relative;margin-top:2.6rem;padding-right:2.4rem}
+    .ceiling{position:absolute;top:-4px;bottom:14px;width:0;border-left:3px dashed var(--red);
       z-index:3}
-    .ceiling span{position:absolute;top:-4px;left:6px;font-family:"Bangers",cursive;
-      color:var(--red);font-size:.85rem;white-space:nowrap}
+    .ceiling span{position:absolute;top:-1.5rem;left:50%;transform:translateX(-50%);
+      font-family:"Bangers",cursive;color:var(--red);font-size:.9rem;white-space:nowrap;
+      background:var(--panel);padding:0 .3rem}
+    .boom{position:absolute;top:-2.4rem;right:0;font-family:"Bangers",cursive;
+      font-size:clamp(1.6rem,6vw,2.6rem);color:var(--yellow);
+      text-shadow:3px 3px 0 var(--red),-2px -2px 0 var(--ink),2px -2px 0 var(--ink);
+      transform:rotate(-9deg);z-index:4;pointer-events:none}
     .row{display:grid;grid-template-columns:8.5rem 1fr;gap:.5rem;align-items:center;margin:.55rem 0}
     .row .who{font-weight:700;font-size:.9rem;text-align:right}
     .tracks{display:flex;flex-direction:column;gap:3px}
@@ -78,11 +86,8 @@
       transition:width 1s cubic-bezier(.2,.9,.3,1);position:relative;overflow:visible}
     .bar.in{background:var(--blue)}
     .bar.out{background:var(--orange)}
-    .bar b{position:absolute;right:-2px;top:50%;transform:translate(100%,-50%);
-      font-size:.72rem;font-weight:700;padding-left:5px;white-space:nowrap}
-    .burst{position:absolute;right:-14px;top:50%;transform:translate(100%,-50%) rotate(-8deg);
-      font-family:"Bangers",cursive;color:var(--red);font-size:1rem;
-      text-shadow:2px 2px 0 var(--ink)}
+    .bar b{position:absolute;right:-6px;top:50%;transform:translate(100%,-50%);
+      font-size:.75rem;font-weight:700;white-space:nowrap}
     .legend{display:flex;gap:1.2rem;font-size:.8rem;font-weight:700;margin-top:.9rem;flex-wrap:wrap}
     .chip{display:inline-block;width:14px;height:14px;border:2px solid var(--ink);
       border-radius:3px;vertical-align:-2px;margin-right:.3rem}
@@ -262,14 +267,20 @@ const ISOLATES = ["Baymax","Bird-Brain","Black Fox","Brain Drain","Breeze Barton
   "Captain Midlands","Charcoal","Father Time","Happy Sam Sawyer","Hellfire","Illuminator",
   "Miracleman","Ogre","Sean and Chris","Solarman","Super Rabbit","Yo-Yo Rodriguez"];
 
-const MAXV = 106, CEIL = 28;
+const MAXV = 106, CEIL = 28, SCALE = 84;   // longest bar fills 84% of the track
 
 const meter = document.getElementById("meter");
+
+const boom = document.createElement("div");
+boom.className = "boom";
+boom.textContent = "BOOM!";
+meter.appendChild(boom);
+
 const ceil = document.createElement("div");
 ceil.className = "ceiling";
 ceil.innerHTML = `<span>CEILING · 28</span>`;
-// the bar track starts after the 8.5rem label column + 0.5rem gap
-ceil.style.left = `calc((100% - 9rem) * ${CEIL / MAXV} + 9rem)`;
+// track starts after the 8.5rem label column + 0.5rem gap; bars scale by SCALE
+ceil.style.left = `calc(9rem + (100% - 2.4rem - 9rem) * ${(CEIL / MAXV) * SCALE / 100})`;
 meter.appendChild(ceil);
 
 FAME.forEach(([name, din, dout]) => {
@@ -278,9 +289,8 @@ FAME.forEach(([name, din, dout]) => {
   row.innerHTML = `
     <div class="who">${name}</div>
     <div class="tracks">
-      <div class="bar in" data-w="${(din / MAXV) * 100}">
-        <b>${din}</b>${din === MAXV ? '<span class="burst">BOOM!</span>' : ''}</div>
-      <div class="bar out" data-w="${(dout / MAXV) * 100}"><b>${dout}</b></div>
+      <div class="bar in" data-w="${(din / MAXV) * SCALE}"><b>${din}</b></div>
+      <div class="bar out" data-w="${(dout / MAXV) * SCALE}"><b>${dout}</b></div>
     </div>`;
   meter.appendChild(row);
 });
