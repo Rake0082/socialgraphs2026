@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Week 1 — The Marvel network · 02805</title>
+  <title>Week 1 — Fame is unbounded, article length is not · 02805</title>
   <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
@@ -11,7 +11,7 @@
 
   <header class="site">
     <div class="kicker">DTU 02805 · Week 1</div>
-    <h1>The Marvel network: hubs, islands, and a heavy tail</h1>
+    <h1>Fame is unbounded, article length is not</h1>
     <nav class="top">
       <a href="../index.html">Home</a>
       <a href="week1.html">Week 1</a>
@@ -21,36 +21,39 @@
 
   <h2>Research question</h2>
   <p>
-    <!-- Pick ONE sharp, answerable question. Draft: -->
-    Is the Marvel Wikipedia network hub-dominated — i.e. does its degree distribution have a
-    heavy (power-law-like) tail rather than a light (exponential) one — and do the in-degree
-    and out-degree distributions differ in a way that tells us how the network was built?
+    In the Marvel Wikipedia network a character's <strong>in-degree</strong> (how many other
+    articles link to it) reaches 106, while its <strong>out-degree</strong> (how many links its
+    own article carries) never passes 28. Is that gap a real property of how Wikipedia is
+    written &mdash; or just an artefact of how this dataset was scraped? We use it as a way to
+    ask <em>how the network was built</em>, and then we check the answer against a fresh rebuild
+    from the live Wikipedia.
   </p>
 
   <h2>Method</h2>
   <ul>
-    <li><strong>Data.</strong> Week-1 frozen snapshot from the course data page:
-      303 character nodes, 1&nbsp;784 directed edges (article&nbsp;A links to article&nbsp;B).
-      Loaded with every node added first, so the 17 isolates survive.</li>
-    <li><strong>Tools.</strong> NetworkX for the graph; in-degree / out-degree; weakly and
-      strongly connected components; degree distributions plotted against <code>k&nbsp;+&nbsp;1</code>
-      on linear and log&ndash;log axes, with logarithmic binning (width-1 bins to
-      <code>k&nbsp;+&nbsp;1&nbsp;=&nbsp;7</code>, doubling bins after).</li>
-    <li><strong>Choices made.</strong> Directed graph kept directed for the in/out analysis;
-      the <code>k&nbsp;+&nbsp;1</code> shift keeps degree-0 nodes on the log axis; binning
-      density is count&nbsp;/&nbsp;(N&nbsp;&times;&nbsp;bin width).</li>
-    <li><strong>Reproduce.</strong> Notebook: <code>week1_distribution.ipynb</code>.</li>
+    <li><strong>Data.</strong> Week-1 frozen snapshot from the course data page: 303 character
+      nodes, 1&nbsp;784 directed edges (article A links to article B). Loaded with every node
+      added first, so the 17 isolates survive.</li>
+    <li><strong>Tools.</strong> NetworkX in- and out-degree over all 303 nodes; Spearman
+      correlation between them; the scatter below; degree distributions with logarithmic
+      binning.</li>
+    <li><strong>Reproduction check.</strong> For the 15 highest out-degree characters we rebuilt
+      their out-links straight from Wikipedia's live HTML (<code>action=parse</code>, navboxes /
+      infoboxes / tables stripped, links kept only inside paragraphs and list items) and scored
+      them against the snapshot.</li>
+    <li><strong>Reproduce.</strong> Notebooks <code>week1_distribution.ipynb</code> and
+      <code>week1_wiki_api_compare.ipynb</code>.</li>
   </ul>
 
-  <h2>A figure</h2>
+  <h2>The figure</h2>
   <figure>
-    <img src="../assets/week1_degree_distributions.png"
-         alt="In-degree and out-degree distributions of the Marvel network, linear and log-log">
+    <img src="../assets/week1_indeg_vs_outdeg.png"
+         alt="Scatter of in-degree versus out-degree for all 303 Marvel characters; a dashed line marks the out-degree ceiling at 28">
     <figcaption>
-      <!-- Replace the image with your exported figure and rewrite this caption. -->
-      In-degree (top) and out-degree (bottom) of the Marvel network, on linear (left) and
-      log&ndash;log (right) axes, plotted against <em>k</em>&nbsp;+&nbsp;1. The in-degree tail
-      reaches Spider-Man at <em>k</em>&nbsp;=&nbsp;106; the out-degree tail stops near 28.
+      One point per character (jittered). The cloud drifts up and to the right &mdash; more
+      linked-to characters do have somewhat richer articles (Spearman&nbsp;&rho;&nbsp;=&nbsp;0.70)
+      &mdash; but out-degree runs into a hard ceiling at 28 (dashed line), while in-degree keeps
+      going. Spider-Man is linked to by 106 articles and links out to just 9.
     </figcaption>
   </figure>
 
@@ -66,30 +69,57 @@
     </tbody>
   </table>
 
-  <h2>What surprised us</h2>
+  <h2>What we found</h2>
   <ul>
-    <li><strong>Out-degree has a ceiling, in-degree does not.</strong> The busiest article
-      links to ~28 other characters; the most-linked-to character is referenced by 106. An
-      out-link is written by one page's editors (bounded by article length); an in-link is
-      conferred by everyone else (unbounded, rich-get-richer).</li>
-    <li><strong>58 of 303 characters have in-degree 0</strong> &mdash; nobody links to them
-      &mdash; yet almost all of them still link outward.</li>
-    <li><strong>1&nbsp;784 directed edges collapse to exactly 1&nbsp;434 undirected</strong>
-      because 350 pairs of characters link to each other, so
-      <code>&langle;k&rangle;&nbsp;=&nbsp;2m/n&nbsp;&approx;&nbsp;9.5</code>.</li>
-    <li><strong>The tail is too heavy for an exponential.</strong> Under an exponential with
-      the same mean, seeing any character at <em>k</em>&nbsp;=&nbsp;106 is astronomically
-      unlikely &mdash; but with n&nbsp;=&nbsp;303 we cannot pin down the exact shape by eye.</li>
+    <li><strong>The two degrees are related, but out-degree saturates.</strong>
+      Spearman&nbsp;&rho;&nbsp;=&nbsp;0.70 &mdash; prominent characters tend to have longer,
+      more cross-linked articles. Yet no article links out to more than 28 others, and the
+      busiest hubs are nowhere near the top: Spider-Man (in&nbsp;106) links out to 9,
+      Hulk (in&nbsp;64) to 10.</li>
+    <li><strong>Why the asymmetry.</strong> An out-link is written by <em>one</em> article's
+      editors and is bounded by how much prose that article has. An in-link is conferred by
+      <em>everyone else</em> &mdash; any of the other 302 articles can decide a character
+      matters &mdash; so in-degree has no ceiling and the well-known characters accumulate links
+      without limit (rich-get-richer; week 2 has a model of exactly this).</li>
+    <li><strong>58 forgotten characters</strong> have in-degree 0: 17 are true isolates (no
+      links either way), and 41 are &ldquo;sources&rdquo; &mdash; their own article links out,
+      but nobody links back.</li>
+    <li><strong>350 of the 1&nbsp;784 directed edges are reciprocated.</strong> Collapsing to
+      undirected pairs removes exactly those duplicates
+      (1&nbsp;784&nbsp;&minus;&nbsp;350&nbsp;=&nbsp;1&nbsp;434), giving a mean undirected degree
+      of <code>2m/n&nbsp;&approx;&nbsp;9.5</code>.</li>
   </ul>
 
-  <h2>Stretch goal — how reproducible is the dataset?</h2>
+  <h2>Does it reproduce?</h2>
   <p>
-    We rebuilt the network from the live MediaWiki API and compared it to the snapshot.
-    The category has drifted from 303 to 380 pages since the 2026-08-26 freeze (3 removed,
-    80 added). For the 15 highest out-degree pages our body-text link rule recovered
-    <strong>92.8&nbsp;%</strong> of the snapshot's edges with <strong>100&nbsp;%</strong>
-    precision &mdash; the misses are almost all in-prose character <em>tables</em>, which our
-    HTML filter strips. Notebook: <code>week1_wiki_api_compare.ipynb</code>.
+    The surprising part &mdash; the out-degree ceiling &mdash; could easily be a scraping choice
+    rather than a fact about Wikipedia. So we rebuilt the out-links of the 15 busiest characters
+    directly from the live encyclopedia:
+  </p>
+  <ul>
+    <li>We recovered <strong>92.8&nbsp;%</strong> of the snapshot's edges with
+      <strong>100&nbsp;%</strong> precision &mdash; the &ldquo;body text, no navigation
+      templates&rdquo; rule invents no edges.</li>
+    <li>The highest reconstructed out-degree is still <strong>28</strong> (Betsy Braddock).
+      <em>The ceiling survives an independent rebuild</em> &mdash; it is in the encyclopedia,
+      not in the scraper.</li>
+    <li>The few edges we miss are in-prose character <em>tables</em> (e.g. Phoenix Force's list
+      of hosts), which our HTML filter strips. They would nudge a handful of out-degrees up by
+      one or two &mdash; not lift the cap.</li>
+    <li>The category itself has drifted from <strong>303 to 380</strong> pages since the
+      2026-08-26 freeze (3 removed, 80 added), so the snapshot is a curated slice, not
+      &ldquo;Wikipedia today&rdquo; &mdash; a good reason for every group to work from the same
+      frozen file.</li>
+  </ul>
+
+  <h2>Conclusion</h2>
+  <p>
+    In-degree and out-degree measure two different things. In-degree is <em>collective
+    editorial attention</em>: unbounded, heavy-tailed, hub-forming. Out-degree is <em>one
+    article's own scope</em>: bounded by how much its editors wrote, capped near 28. The
+    positive correlation just says popular characters also get longer articles &mdash; it does
+    not close the gap. And the reproduction check says this is a structural fact about how
+    Wikipedia is written, not a quirk of our data file.
   </p>
 
   <footer class="site">
