@@ -11,6 +11,11 @@
   --card: #fffdf7;
   --maxw: 820px;
   --shadow: 8px 8px 0 rgba(20, 20, 20, .16);
+  --red: #e5352b;
+  --yellow: #ffd23f;
+  --blue: #2f6fed;
+  --orange: #ff7a2f;
+  --ink: #141414;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,6 +27,7 @@
     --border: #f2ede0;
     --card: #241f18;
     --shadow: 8px 8px 0 rgba(0, 0, 0, .5);
+    --ink: #f2ede0;
   }
 }
 
@@ -121,12 +127,98 @@ code {
 }
 
 footer.site {
-  border-top: 1px solid var(--border);
-  margin-top: 3.5rem;
+  border-top: 3px solid var(--border);
+  margin-top: 3rem;
   padding-top: 1.25rem;
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
+
+/* ---- comic zine panels (shared with the week posts) ---- */
+.panel {
+  background: var(--card);
+  border: 4px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 1.4rem 1.3rem;
+  margin: 1.6rem 0;
+}
+.panel:nth-of-type(odd)  { transform: rotate(-0.5deg); }
+.panel:nth-of-type(even) { transform: rotate(0.5deg); }
+
+.panel > h2 {
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  margin: 0 0 0.5rem;
+  color: var(--yellow);
+  text-shadow: 3px 3px 0 var(--ink), -1px -1px 0 var(--ink);
+}
+
+.kapow {
+  font-family: "Bangers", cursive;
+  line-height: 0.95; letter-spacing: 0.02em;
+  margin: 0; text-transform: uppercase;
+}
+
+.splash {
+  text-align: center;
+  background: var(--red);
+  color: #fff;
+  border-color: var(--ink);
+  padding: 2.4rem 1.2rem;
+}
+.splash h1 {
+  font-size: clamp(2.6rem, 9vw, 4.6rem);
+  text-shadow: 4px 4px 0 var(--ink);
+  margin: 0;
+}
+.splash .sub {
+  font-weight: 700;
+  font-size: clamp(0.95rem, 2.6vw, 1.2rem);
+  line-height: 1.4;
+  max-width: 34rem;
+  margin: 0.8rem auto 0;
+}
+.splash .byline {
+  font-weight: 600; font-size: 0.8rem; opacity: 0.9; margin-top: 1.1rem;
+}
+
+.crew { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+.crew .card {
+  flex: 1 1 220px;
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  background: var(--card);
+  box-shadow: 4px 4px 0 rgba(20, 20, 20, .14);
+}
+.crew .card .role { font-family: "Bangers", cursive; color: var(--accent); font-size: 1.05rem; }
+.crew .card .who  { font-weight: 700; }
+
+.issue {
+  display: block;
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  margin-bottom: 0.9rem;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  color: inherit; text-decoration: none;
+  transition: transform 0.12s;
+}
+.issue:hover { transform: translate(-2px, -2px); text-decoration: none; }
+.issue .tag {
+  display: inline-block;
+  font-family: "Bangers", cursive;
+  background: var(--accent); color: #fff;
+  padding: 0.05rem 0.55rem; border-radius: 4px;
+  font-size: 0.95rem; letter-spacing: 0.04em; margin-bottom: 0.35rem;
+}
+.issue .headline { font-family: "Bangers", cursive; font-size: 1.5rem; letter-spacing: 0.02em; display: block; }
+.issue .blurb { color: var(--muted); font-weight: 500; margin: 0.25rem 0 0; }
+
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity .5s, transform .5s; }
+.reveal.in-view { opacity: 1; transform: none; }
 
 /* ---- most-cited character cards ---- */
 .hero-row {

@@ -9,48 +9,61 @@
 <body>
 <div class="wrap">
 
-  <header class="site">
-    <div class="kicker">DTU 02805 · Social Graphs and Interactions · 2026</div>
-    <h1>Tangled Web</h1>
-    <p class="muted" style="margin:-0.3rem 0 0.6rem;font-weight:600">
-      Rakel &amp; Jakob pull apart the Marvel Wikipedia network, one week at a time.
+  <nav class="comic-nav" style="display:flex;gap:1rem;font-family:'Bangers',cursive;
+       letter-spacing:.06em;font-size:1.2rem;margin-bottom:1rem">
+    <a href="index.html" style="color:var(--fg);text-decoration:none">Home</a>
+    <a href="posts/week1.html" style="color:var(--fg);text-decoration:none">Week 1</a>
+  </nav>
+
+  <!-- COVER -->
+  <section class="panel splash">
+    <h1 class="kapow">Tangled Web</h1>
+    <p class="sub">Rakel &amp; Jakob pull apart the Marvel Wikipedia network &mdash;
+      303 superheroes, thousands of links &mdash; one week at a time.</p>
+    <div class="byline">DTU 02805 · Social Graphs and Interactions · 2026</div>
+  </section>
+
+  <!-- HEADLINERS -->
+  <section class="panel reveal">
+    <h2 class="kapow">The headliners</h2>
+    <p class="muted" style="margin:.2rem 0 1rem">
+      The three most linked-to characters (highest <strong>in-degree</strong>).
+      Tap a card for its ego network and stats.
     </p>
-    <nav class="top">
-      <a href="index.html">Home</a>
-      <a href="posts/week1.html">Week 1</a>
-    </nav>
-  </header>
+    <div id="heroes" class="hero-row">
+      <p class="muted" id="hero-fallback">Loading character data&hellip;</p>
+    </div>
+    <div id="hero-panel" class="hero-panel" hidden></div>
+  </section>
 
-  <h2>Who we are</h2>
-  <ul class="members">
-    <li>Rakel Zander Ebdrup · <a href="https://github.com/Rake0082">@Rake0082</a></li>
-    <li>Jakob Kargo Mortensen · <a href="https://github.com/jkm-dtu">@jkm-dtu</a></li>
-  </ul>
-  <p class="muted">
-    We analyse the shared Marvel Comics Wikipedia network throughout the course.
-    One post per week.
-  </p>
+  <!-- ISSUES -->
+  <section class="panel reveal">
+    <h2 class="kapow">The issues</h2>
+    <a class="issue" href="posts/week1.html">
+      <span class="tag">Issue #1 · Week 1</span>
+      <span class="headline">Who's friends with who?</span>
+      <p class="blurb">350 mutual friendships, why fame has no ceiling, and whether it all
+        survives a rebuild from the live Wikipedia.</p>
+    </a>
+    <p class="muted" style="font-weight:500;margin:.4rem 0 0">Next issue drops every week.</p>
+  </section>
 
-  <h2>The three most-cited characters</h2>
-  <p class="muted">
-    Ranked by <strong>in-degree</strong> &mdash; how many other character articles link to them.
-    Click a card for its ego network and stats.
-  </p>
-
-  <div id="heroes" class="hero-row">
-    <p class="muted" id="hero-fallback">Loading character data&hellip;</p>
-  </div>
-  <div id="hero-panel" class="hero-panel" hidden></div>
-
-  <h2>Posts</h2>
-  <ul class="posts">
-    <li>
-      <div class="date">Week 1</div>
-      <a href="posts/week1.html">Who's friends with who?</a>
-      <p class="muted">The Marvel hero connections &mdash; 350 mutual friendships, why fame has
-        no ceiling, and does it all survive a rebuild from the live Wikipedia?</p>
-    </li>
-  </ul>
+  <!-- CREW -->
+  <section class="panel reveal">
+    <h2 class="kapow">The crew</h2>
+    <div class="crew">
+      <div class="card">
+        <div class="role">Writer / analyst</div>
+        <div class="who">Rakel Zander Ebdrup</div>
+        <a href="https://github.com/Rake0082">@Rake0082</a>
+      </div>
+      <div class="card">
+        <div class="role">Writer / analyst</div>
+        <div class="who">Jakob Kargo Mortensen</div>
+        <a href="https://github.com/jkm-dtu">@jkm-dtu</a>
+      </div>
+    </div>
+  </section>
 
   <footer class="site">
     Tangled Web · built with an LLM for DTU course 02805 · no Marvel artwork was harmed · source:
@@ -234,6 +247,13 @@ fetch("assets/heroes.json")
     if (fb) fb.textContent =
       "Could not load assets/heroes.json — run the export cell in week1_distribution.ipynb.";
   });
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add("in-view"); io.unobserve(e.target); }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 </script>
 </body>
 </html>
