@@ -64,6 +64,57 @@ function initials(name) {
              .map(w => w[0]).join("").slice(0, 2).toUpperCase();
 }
 
+function slugify(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+/* Original, drawn placeholder portrait — no copyrighted artwork.
+   Replaced automatically by assets/heroes/<slug>.jpg (or .png) if that file exists. */
+function portraitSVG(name, accent) {
+  const short = name.replace(/\s*\(.*?\)/, "");
+  const motif = {
+    "Spider-Man": `
+      <g stroke="rgba(255,255,255,.5)" stroke-width="1.4" fill="none">
+        <line x1="100" y1="14" x2="100" y2="206"/>
+        <line x1="18" y1="40" x2="182" y2="200"/>
+        <line x1="182" y1="40" x2="18" y2="200"/>
+        <line x1="24" y1="120" x2="176" y2="120"/>
+        <path d="M60 60 A60 60 0 0 1 140 60"/>
+        <path d="M44 104 A80 80 0 0 1 156 104"/>
+        <path d="M40 156 A100 100 0 0 1 160 156"/>
+      </g>`,
+    "Hulk": `
+      <polyline points="70,20 96,80 78,96 118,150 100,168 150,220"
+        fill="none" stroke="rgba(255,255,255,.55)" stroke-width="4"
+        stroke-linejoin="round"/>`,
+    "Wolverine": `
+      <g stroke="rgba(255,255,255,.65)" stroke-width="6" stroke-linecap="round">
+        <line x1="52" y1="30" x2="150" y2="210"/>
+        <line x1="78" y1="24" x2="176" y2="204"/>
+        <line x1="104" y1="18" x2="200" y2="196"/>
+      </g>`,
+  }[short] || `
+      <circle cx="100" cy="120" r="70" fill="none"
+        stroke="rgba(255,255,255,.4)" stroke-width="3"/>`;
+
+  return `
+    <svg viewBox="0 0 200 240" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="g-${slugify(name)}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="${accent}"/>
+          <stop offset="1" stop-color="rgba(0,0,0,.55)"/>
+        </linearGradient>
+      </defs>
+      <rect width="200" height="240" fill="url(#g-${slugify(name)})"/>
+      ${motif}
+      <circle cx="100" cy="96" r="46" fill="rgba(255,255,255,.12)"
+        stroke="rgba(255,255,255,.4)" stroke-width="2"/>
+      <path d="M40 240 q0 -70 60 -70 q60 0 60 70 Z" fill="rgba(255,255,255,.12)"/>
+      <polygon points="74,92 96,86 92,104 74,104" fill="rgba(255,255,255,.85)"/>
+      <polygon points="126,92 104,86 108,104 126,104" fill="rgba(255,255,255,.85)"/>
+    </svg>`;
+}
+
 function egoSVG(hero) {
   const W = 340, C = W / 2, R = 118;
   const nodes = hero.nodes;
@@ -133,11 +184,14 @@ function render(data) {
   entries.forEach(([name, hero], idx) => {
     const accent = ACCENTS[idx % ACCENTS.length];
     const short = name.replace(/\s*\(.*?\)/, "");
+    const slug = slugify(name);
     const btn = document.createElement("button");
     btn.className = "hero-card";
     btn.setAttribute("aria-pressed", "false");
     btn.innerHTML = `
-      <span class="hero-emblem" style="background:${accent}">${initials(name)}</span>
+      <span class="hero-portrait" data-slug="${slug}">
+        ${portraitSVG(name, accent)}
+      </span>
       <span class="hero-meta">
         <span class="hero-name">${short}</span>
         <span class="hero-sub">#${hero.in_rank} · in-degree ${hero.in_degree}</span>
@@ -153,6 +207,19 @@ function render(data) {
       }
     });
     row.appendChild(btn);
+  });
+  // if a real photo file exists (assets/heroes/<slug>.jpg or .png), layer it over the drawn portrait
+  row.querySelectorAll(".hero-portrait").forEach(box => {
+    const slug = box.dataset.slug;
+    (function tryExt(exts) {
+      if (!exts.length) return;
+      const img = new Image();
+      img.className = "hero-photo";
+      img.alt = "";
+      img.onload = () => box.appendChild(img);
+      img.onerror = () => tryExt(exts.slice(1));
+      img.src = `assets/heroes/${slug}.${exts[0]}`;
+    })(["jpg", "jpeg", "png", "webp"]);
   });
 }
 
