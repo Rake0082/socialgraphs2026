@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 1 — The Marvel network · 02805 Group [NUMBER]</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="site">
+    <div class="kicker">DTU 02805 · Week 1</div>
+    <h1>The Marvel network: hubs, islands, and a heavy tail</h1>
+    <nav class="top">
+      <a href="../index.html">Home</a>
+      <a href="week1.html">Week 1</a>
+    </nav>
+    <p class="muted">Group [NUMBER] — @Rake0082, @jkm-dtu · [DATE]</p>
+  </header>
+
+  <h2>Research question</h2>
+  <p>
+    <!-- Pick ONE sharp, answerable question. Draft: -->
+    Is the Marvel Wikipedia network hub-dominated — i.e. does its degree distribution have a
+    heavy (power-law-like) tail rather than a light (exponential) one — and do the in-degree
+    and out-degree distributions differ in a way that tells us how the network was built?
+  </p>
+
+  <h2>Method</h2>
+  <ul>
+    <li><strong>Data.</strong> Week-1 frozen snapshot from the course data page:
+      303 character nodes, 1&nbsp;784 directed edges (article&nbsp;A links to article&nbsp;B).
+      Loaded with every node added first, so the 17 isolates survive.</li>
+    <li><strong>Tools.</strong> NetworkX for the graph; in-degree / out-degree; weakly and
+      strongly connected components; degree distributions plotted against <code>k&nbsp;+&nbsp;1</code>
+      on linear and log&ndash;log axes, with logarithmic binning (width-1 bins to
+      <code>k&nbsp;+&nbsp;1&nbsp;=&nbsp;7</code>, doubling bins after).</li>
+    <li><strong>Choices made.</strong> Directed graph kept directed for the in/out analysis;
+      the <code>k&nbsp;+&nbsp;1</code> shift keeps degree-0 nodes on the log axis; binning
+      density is count&nbsp;/&nbsp;(N&nbsp;&times;&nbsp;bin width).</li>
+    <li><strong>Reproduce.</strong> Notebook: <code>week1_distribution.ipynb</code>.</li>
+  </ul>
+
+  <h2>A figure</h2>
+  <figure>
+    <img src="../assets/week1_degree_distributions.png"
+         alt="In-degree and out-degree distributions of the Marvel network, linear and log-log">
+    <figcaption>
+      <!-- Replace the image with your exported figure and rewrite this caption. -->
+      In-degree (top) and out-degree (bottom) of the Marvel network, on linear (left) and
+      log&ndash;log (right) axes, plotted against <em>k</em>&nbsp;+&nbsp;1. The in-degree tail
+      reaches Spider-Man at <em>k</em>&nbsp;=&nbsp;106; the out-degree tail stops near 28.
+    </figcaption>
+  </figure>
+
+  <h3>Top characters by degree</h3>
+  <table>
+    <thead><tr><th>#</th><th>In-degree</th><th></th><th>Out-degree</th><th></th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Spider-Man</td><td>106</td><td>Betsy Braddock</td><td>28</td></tr>
+      <tr><td>2</td><td>Hulk</td><td>64</td><td>Cloak and Dagger</td><td>24</td></tr>
+      <tr><td>3</td><td>Wolverine</td><td>60</td><td>Adam Warlock</td><td>22</td></tr>
+      <tr><td>4</td><td>Doctor Strange</td><td>50</td><td>Venom</td><td>21</td></tr>
+      <tr><td>5</td><td>Deadpool</td><td>33</td><td>She-Hulk</td><td>20</td></tr>
+    </tbody>
+  </table>
+
+  <h2>What surprised us</h2>
+  <ul>
+    <li><strong>Out-degree has a ceiling, in-degree does not.</strong> The busiest article
+      links to ~28 other characters; the most-linked-to character is referenced by 106. An
+      out-link is written by one page's editors (bounded by article length); an in-link is
+      conferred by everyone else (unbounded, rich-get-richer).</li>
+    <li><strong>58 of 303 characters have in-degree 0</strong> &mdash; nobody links to them
+      &mdash; yet almost all of them still link outward.</li>
+    <li><strong>1&nbsp;784 directed edges collapse to exactly 1&nbsp;434 undirected</strong>
+      because 350 pairs of characters link to each other, so
+      <code>&langle;k&rangle;&nbsp;=&nbsp;2m/n&nbsp;&approx;&nbsp;9.5</code>.</li>
+    <li><strong>The tail is too heavy for an exponential.</strong> Under an exponential with
+      the same mean, seeing any character at <em>k</em>&nbsp;=&nbsp;106 is astronomically
+      unlikely &mdash; but with n&nbsp;=&nbsp;303 we cannot pin down the exact shape by eye.</li>
+  </ul>
+
+  <h2>Stretch goal — how reproducible is the dataset?</h2>
+  <p>
+    We rebuilt the network from the live MediaWiki API and compared it to the snapshot.
+    The category has drifted from 303 to 380 pages since the 2026-08-26 freeze (3 removed,
+    80 added). For the 15 highest out-degree pages our body-text link rule recovered
+    <strong>92.8&nbsp;%</strong> of the snapshot's edges with <strong>100&nbsp;%</strong>
+    precision &mdash; the misses are almost all in-prose character <em>tables</em>, which our
+    HTML filter strips. Notebook: <code>week1_wiki_api_compare.ipynb</code>.
+  </p>
+
+  <footer class="site">
+    <a href="../index.html">&larr; Back to home</a>
+  </footer>
+
+</div>
+</body>
+</html>
