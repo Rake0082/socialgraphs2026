@@ -102,3 +102,81 @@ footer.site {
   color: var(--muted);
   font-size: 0.9rem;
 }
+
+/* ---- most-cited character cards ---- */
+.hero-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.9rem;
+  margin: 1.2rem 0;
+}
+@media (max-width: 620px) {
+  .hero-row { grid-template-columns: 1fr; }
+}
+
+.hero-card {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  padding: 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.hero-card:hover { border-color: var(--muted); }
+.hero-card[aria-pressed="true"] {
+  border-color: var(--card-accent, var(--accent));
+  box-shadow: inset 0 0 0 1px var(--card-accent, var(--accent));
+}
+
+.hero-emblem {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.hero-meta { display: flex; flex-direction: column; line-height: 1.3; }
+.hero-name { font-weight: 600; }
+.hero-sub { color: var(--muted); font-size: 0.85rem; }
+
+.hero-panel {
+  margin: 0.9rem 0 0;
+  padding: 1.1rem;
+  border: 1px solid var(--card-accent, var(--border));
+  border-radius: 12px;
+  background: var(--card);
+}
+
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 1.3rem;
+  font-size: 0.92rem;
+  margin-bottom: 0.4rem;
+}
+.hero-stats b { font-size: 1.05rem; }
+.hero-panel-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-right: 0.4rem;
+}
+
+.hero-ego {
+  max-width: 460px;
+  margin: 0.6rem auto 0;
+}
+.hero-ego svg { width: 100%; height: auto; display: block; overflow: visible; }
+.hero-legend { font-size: 0.82rem; margin: 0.6rem 0 0; }

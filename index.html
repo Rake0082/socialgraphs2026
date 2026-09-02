@@ -28,6 +28,17 @@
     One post per week.
   </p>
 
+  <h2>The three most-cited characters</h2>
+  <p class="muted">
+    Ranked by <strong>in-degree</strong> &mdash; how many other character articles link to them.
+    Click a card for its ego network and stats.
+  </p>
+
+  <div id="heroes" class="hero-row">
+    <p class="muted" id="hero-fallback">Loading character data&hellip;</p>
+  </div>
+  <div id="hero-panel" class="hero-panel" hidden></div>
+
   <h2>Posts</h2>
   <ul class="posts">
     <li>
@@ -44,5 +55,115 @@
   </footer>
 
 </div>
+
+<script>
+const ACCENTS = ["#b3261e", "#1f7a4d", "#2f5db0"];   // one per card
+
+function initials(name) {
+  return name.replace(/\(.*?\)/g, "").trim().split(/[\s-]+/)
+             .map(w => w[0]).join("").slice(0, 2).toUpperCase();
+}
+
+function egoSVG(hero) {
+  const W = 340, C = W / 2, R = 118;
+  const nodes = hero.nodes;
+  const hub = nodes[0];
+  const others = nodes.slice(1);
+  const pos = [[C, C]];
+  others.forEach((_, i) => {
+    const a = (i / others.length) * 2 * Math.PI - Math.PI / 2;
+    pos.push([C + R * Math.cos(a), C + R * Math.sin(a)]);
+  });
+  const rOf = d => 4 + 2.3 * Math.sqrt(d);
+  const dirColour = { in: "var(--accent)", out: "#7a8698", both: "#b48a00" };
+
+  let s = `<svg viewBox="0 0 ${W} ${W}" role="img" aria-label="Ego network of ${hub.name}">`;
+  // edges
+  for (const [i, j] of hero.edges) {
+    const touchesHub = (i === 0 || j === 0);
+    const col = touchesHub ? dirColour[nodes[i === 0 ? j : i].dir] : "var(--border)";
+    const wdt = touchesHub ? 1.6 : 0.7;
+    s += `<line x1="${pos[i][0]}" y1="${pos[i][1]}" x2="${pos[j][0]}" y2="${pos[j][1]}" `
+       + `stroke="${col}" stroke-width="${wdt}" opacity="${touchesHub ? 0.9 : 0.45}"/>`;
+  }
+  // nodes + labels
+  nodes.forEach((nd, i) => {
+    const [x, y] = pos[i];
+    const r = nd.is_hero ? rOf(nd.in_degree) * 0.9 + 4 : rOf(nd.in_degree);
+    s += `<circle cx="${x}" cy="${y}" r="${r}" `
+       + `fill="${nd.is_hero ? "var(--accent)" : "var(--card)"}" `
+       + `stroke="${nd.is_hero ? "var(--accent)" : "var(--muted)"}" stroke-width="1.5">`
+       + `<title>${nd.name} — in-degree ${nd.in_degree}</title></circle>`;
+    if (!nd.is_hero) {
+      const anchor = x < C - 8 ? "end" : x > C + 8 ? "start" : "middle";
+      const dx = anchor === "end" ? -r - 3 : anchor === "start" ? r + 3 : 0;
+      const dy = anchor === "middle" ? (y < C ? -r - 4 : r + 10) : 3;
+      s += `<text x="${x + dx}" y="${y + dy}" text-anchor="${anchor}" `
+         + `font-size="9" fill="var(--fg)">${nd.name.replace(/\s*\(.*?\)/, "")}</text>`;
+    }
+  });
+  s += `</svg>`;
+  return s;
+}
+
+function showPanel(name, hero, accent) {
+  const panel = document.getElementById("hero-panel");
+  panel.style.setProperty("--card-accent", accent);
+  panel.innerHTML = `
+    <div class="hero-stats">
+      <span class="hero-panel-name">${name}</span>
+      <span><b>#${hero.in_rank}</b> by in-degree</span>
+      <span><b>${hero.in_degree}</b> in-degree</span>
+      <span><b>${hero.out_degree}</b> out-degree</span>
+      <span><b>${hero.n_neighbours}</b> distinct neighbours</span>
+    </div>
+    <div class="hero-ego">${egoSVG(hero)}</div>
+    <p class="muted hero-legend">
+      Centre = the character. Ring = its 14 highest in-degree neighbours; node radius &prop; that
+      neighbour's in-degree. <span style="color:var(--accent)">Red</span> link = someone links
+      <em>to</em> the character, grey = the character links <em>out</em>, gold = mutual.
+    </p>`;
+  panel.hidden = false;
+}
+
+function render(data) {
+  const row = document.getElementById("heroes");
+  row.innerHTML = "";
+  const entries = Object.entries(data);
+  entries.forEach(([name, hero], idx) => {
+    const accent = ACCENTS[idx % ACCENTS.length];
+    const short = name.replace(/\s*\(.*?\)/, "");
+    const btn = document.createElement("button");
+    btn.className = "hero-card";
+    btn.setAttribute("aria-pressed", "false");
+    btn.innerHTML = `
+      <span class="hero-emblem" style="background:${accent}">${initials(name)}</span>
+      <span class="hero-meta">
+        <span class="hero-name">${short}</span>
+        <span class="hero-sub">#${hero.in_rank} · in-degree ${hero.in_degree}</span>
+      </span>`;
+    btn.addEventListener("click", () => {
+      const wasActive = btn.getAttribute("aria-pressed") === "true";
+      row.querySelectorAll(".hero-card").forEach(b => b.setAttribute("aria-pressed", "false"));
+      if (wasActive) {
+        document.getElementById("hero-panel").hidden = true;
+      } else {
+        btn.setAttribute("aria-pressed", "true");
+        showPanel(short, hero, accent);
+      }
+    });
+    row.appendChild(btn);
+  });
+}
+
+fetch("assets/heroes.json")
+  .then(r => r.json())
+  .then(render)
+  .catch(() => {
+    const fb = document.getElementById("hero-fallback");
+    if (fb) fb.textContent =
+      "Could not load assets/heroes.json — run the export cell in week1_distribution.ipynb.";
+  });
+</script>
 </body>
 </html>
