@@ -1,23 +1,27 @@
 /* ---- 02805 Social Graphs — group site ---- */
 
+@import url("https://fonts.googleapis.com/css2?family=Bangers&family=Space+Grotesk:wght@400;600;700&display=swap");
+
 :root {
-  --bg: #ffffff;
-  --fg: #1a1a1a;
-  --muted: #5b6470;
-  --accent: #b3261e;
-  --border: #e3e6ea;
-  --card: #f7f8fa;
+  --bg: #fdf3df;
+  --fg: #141414;
+  --muted: #6b6250;
+  --accent: #e5352b;
+  --border: #141414;
+  --card: #fffdf7;
   --maxw: 820px;
+  --shadow: 8px 8px 0 rgba(20, 20, 20, .16);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0f1115;
-    --fg: #e7e9ec;
-    --muted: #9aa4b1;
-    --accent: #ff6b61;
-    --border: #262b33;
-    --card: #171a20;
+    --bg: #1a1712;
+    --fg: #f2ede0;
+    --muted: #a99f8b;
+    --accent: #ff7a2f;
+    --border: #f2ede0;
+    --card: #241f18;
+    --shadow: 8px 8px 0 rgba(0, 0, 0, .5);
   }
 }
 
@@ -27,7 +31,9 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
-  font: 17px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font: 17px/1.6 "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-image: radial-gradient(rgba(20, 20, 20, .08) 1.1px, transparent 1.2px);
+  background-size: 16px 16px;
 }
 
 .wrap {
@@ -49,11 +55,22 @@ header.site .kicker {
   text-transform: uppercase;
 }
 
-h1 { font-size: 2rem; line-height: 1.2; margin: 0.3rem 0 0.6rem; }
-h2 { font-size: 1.3rem; margin: 2.4rem 0 0.7rem; }
+h1 {
+  font-family: "Bangers", cursive;
+  font-size: clamp(2.4rem, 7vw, 3.4rem);
+  line-height: 1; letter-spacing: 0.03em;
+  margin: 0.3rem 0 0.6rem;
+  text-transform: uppercase;
+}
+h2 {
+  font-family: "Bangers", cursive;
+  font-size: 1.7rem; letter-spacing: 0.03em;
+  color: var(--accent);
+  margin: 2.6rem 0 0.7rem;
+}
 h3 { font-size: 1.05rem; margin: 1.6rem 0 0.4rem; }
 
-a { color: var(--accent); text-decoration: none; }
+a { color: var(--accent); text-decoration: none; font-weight: 700; }
 a:hover { text-decoration: underline; }
 
 .muted { color: var(--muted); }
@@ -71,13 +88,21 @@ ul.members li {
 
 ul.posts { list-style: none; padding: 0; }
 ul.posts li {
-  border: 1px solid var(--border);
+  border: 3px solid var(--border);
   border-radius: 10px;
   padding: 1rem 1.2rem;
   margin-bottom: 0.9rem;
   background: var(--card);
+  box-shadow: var(--shadow);
 }
-ul.posts li .date { color: var(--muted); font-size: 0.85rem; }
+ul.posts li a { font-family: "Bangers", cursive; font-size: 1.35rem; letter-spacing: 0.02em; }
+ul.posts li .date {
+  display: inline-block;
+  font-family: "Bangers", cursive;
+  background: var(--accent); color: #fff;
+  padding: 0.05rem 0.5rem; border-radius: 4px;
+  font-size: 0.9rem; margin-bottom: 0.3rem;
+}
 
 figure { margin: 1.5rem 0; }
 figure img { width: 100%; border: 1px solid var(--border); border-radius: 8px; }
@@ -119,7 +144,7 @@ footer.site {
   flex-direction: column;
   width: 100%;
   padding: 0;
-  border: 1px solid var(--border);
+  border: 3px solid var(--border);
   border-radius: 12px;
   background: var(--card);
   color: inherit;
@@ -127,12 +152,16 @@ footer.site {
   text-align: left;
   cursor: pointer;
   overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 0.12s;
 }
-.hero-card:hover { border-color: var(--muted); }
+.hero-card:nth-child(odd) { transform: rotate(-1deg); }
+.hero-card:nth-child(even) { transform: rotate(1deg); }
+.hero-card:hover { transform: rotate(0) translateY(-3px); }
 .hero-card:hover .hero-portrait { filter: brightness(1.06); }
 .hero-card[aria-pressed="true"] {
-  border-color: var(--card-accent, var(--accent));
-  box-shadow: inset 0 0 0 2px var(--card-accent, var(--accent));
+  transform: rotate(0);
+  box-shadow: inset 0 0 0 3px var(--card-accent, var(--accent)), var(--shadow);
 }
 
 .hero-portrait {

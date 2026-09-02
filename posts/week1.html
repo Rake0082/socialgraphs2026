@@ -3,129 +3,281 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Week 1 — Fame is unbounded, article length is not · 02805</title>
-  <link rel="stylesheet" href="../assets/style.css">
+  <title>Week 1 — Fame is unbounded · 02805</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ink:#141414; --paper:#fdf3df; --panel:#fffdf7;
+      --blue:#2f6fed; --orange:#ff7a2f; --red:#e5352b; --yellow:#ffd23f;
+      --shadow:10px 10px 0 rgba(20,20,20,.18);
+    }
+    @media (prefers-color-scheme:dark){
+      :root{ --ink:#f2ede0; --paper:#1a1712; --panel:#241f18; --shadow:10px 10px 0 rgba(0,0,0,.5); }
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:var(--paper); color:var(--ink);
+      font-family:"Space Grotesk",system-ui,sans-serif; font-size:17px; line-height:1.5;
+      background-image:radial-gradient(rgba(20,20,20,.09) 1.1px, transparent 1.2px);
+      background-size:16px 16px;
+      overflow-x:hidden;
+    }
+    .zine{max-width:820px;margin:0 auto;padding:2rem 1rem 5rem}
+    a{color:var(--red);font-weight:700}
+
+    .comic-nav{display:flex;gap:1rem;font-family:"Bangers",cursive;letter-spacing:.06em;
+      font-size:1.2rem;margin-bottom:1.4rem}
+    .comic-nav a{color:var(--ink);text-decoration:none}
+    .comic-nav a:hover{color:var(--red)}
+
+    .panel{
+      background:var(--panel); border:4px solid var(--ink); border-radius:8px;
+      box-shadow:var(--shadow); padding:1.4rem 1.3rem; margin:1.6rem 0;
+    }
+    .panel:nth-of-type(odd){transform:rotate(-.5deg)}
+    .panel:nth-of-type(even){transform:rotate(.5deg)}
+
+    .kapow{
+      font-family:"Bangers",cursive; line-height:.95; letter-spacing:.02em;
+      margin:0; text-transform:uppercase;
+    }
+    .splash{
+      text-align:center; background:var(--red); color:#fff; border-color:var(--ink);
+      padding:2.2rem 1rem;
+    }
+    .splash .kapow{font-size:clamp(2.4rem,8vw,4.2rem); text-shadow:4px 4px 0 var(--ink)}
+    .splash .sub{font-family:"Bangers",cursive;font-size:clamp(1.1rem,3.5vw,1.6rem);
+      color:var(--yellow);text-shadow:2px 2px 0 var(--ink);margin-top:.4rem}
+    .byline{font-family:"Space Grotesk";font-weight:600;font-size:.8rem;opacity:.85;margin-top:1rem}
+
+    .vs{display:flex;align-items:center;justify-content:center;gap:clamp(1rem,6vw,3rem);margin-top:1.4rem}
+    .vs .num{font-family:"Bangers",cursive;line-height:.8;text-shadow:3px 3px 0 var(--ink)}
+    .vs .big{font-size:clamp(3rem,14vw,6.5rem);color:var(--yellow)}
+    .vs .small{font-size:clamp(1.6rem,7vw,3rem);color:#fff}
+    .vs .lab{display:block;font-size:.9rem;letter-spacing:.1em;margin-top:.2rem}
+
+    h2.kapow{font-size:clamp(1.6rem,5vw,2.4rem);margin:0 0 .3rem;color:var(--red)}
+    .lede{font-size:1.05rem;margin:.2rem 0 1rem}
+    .tiny{font-size:.82rem;opacity:.75}
+
+    /* fame meter */
+    .meter{position:relative;margin-top:1rem}
+    .ceiling{position:absolute;top:-6px;bottom:18px;width:0;border-left:3px dashed var(--red);
+      z-index:3}
+    .ceiling span{position:absolute;top:-4px;left:6px;font-family:"Bangers",cursive;
+      color:var(--red);font-size:.85rem;white-space:nowrap}
+    .row{display:grid;grid-template-columns:8.5rem 1fr;gap:.5rem;align-items:center;margin:.55rem 0}
+    .row .who{font-weight:700;font-size:.9rem;text-align:right}
+    .tracks{display:flex;flex-direction:column;gap:3px}
+    .bar{height:16px;border:2px solid var(--ink);border-radius:3px;width:0;
+      transition:width 1s cubic-bezier(.2,.9,.3,1);position:relative;overflow:visible}
+    .bar.in{background:var(--blue)}
+    .bar.out{background:var(--orange)}
+    .bar b{position:absolute;right:-2px;top:50%;transform:translate(100%,-50%);
+      font-size:.72rem;font-weight:700;padding-left:5px;white-space:nowrap}
+    .burst{position:absolute;right:-14px;top:50%;transform:translate(100%,-50%) rotate(-8deg);
+      font-family:"Bangers",cursive;color:var(--red);font-size:1rem;
+      text-shadow:2px 2px 0 var(--ink)}
+    .legend{display:flex;gap:1.2rem;font-size:.8rem;font-weight:700;margin-top:.9rem;flex-wrap:wrap}
+    .chip{display:inline-block;width:14px;height:14px;border:2px solid var(--ink);
+      border-radius:3px;vertical-align:-2px;margin-right:.3rem}
+
+    /* why panels */
+    .why{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    @media(max-width:620px){.why{grid-template-columns:1fr}}
+    .bubble{border:3px solid var(--ink);border-radius:14px;padding:1rem;background:var(--panel)}
+    .bubble .em{font-family:"Bangers",cursive;font-size:1.3rem;display:block;margin-bottom:.3rem}
+    .bubble.inlink{background:color-mix(in srgb,var(--blue) 14%,var(--panel))}
+    .bubble.outlink{background:color-mix(in srgb,var(--orange) 16%,var(--panel))}
+
+    /* lonely grid */
+    .masks{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:.8rem}
+    .mask{width:46px;height:46px;border:3px solid var(--ink);border-radius:50% 50% 46% 46%;
+      background:var(--panel);position:relative;cursor:default;transition:transform .15s}
+    .mask::before,.mask::after{content:"";position:absolute;top:34%;width:9px;height:7px;
+      background:var(--ink);border-radius:50%}
+    .mask::before{left:22%}.mask::after{right:22%}
+    .mask:hover{transform:translateY(-4px) rotate(-6deg);background:var(--yellow)}
+    .mask .nm{position:absolute;left:50%;top:-1.6rem;transform:translateX(-50%);
+      font-size:.7rem;font-weight:700;background:var(--ink);color:var(--paper);
+      padding:1px 5px;border-radius:4px;opacity:0;pointer-events:none;white-space:nowrap;transition:opacity .12s}
+    .mask:hover .nm{opacity:1}
+
+    /* stat tiles */
+    .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.8rem;margin-top:1rem}
+    .tile{border:3px solid var(--ink);border-radius:8px;padding:.8rem;text-align:center;background:var(--panel)}
+    .tile .n{font-family:"Bangers",cursive;font-size:2.1rem;line-height:1;color:var(--blue)}
+    .tile .t{font-size:.78rem;font-weight:700;opacity:.8}
+
+    /* verdict */
+    .verdict{background:var(--yellow);color:var(--ink);text-align:center}
+    .checks{list-style:none;padding:0;margin:1rem 0;font-weight:700;font-size:1.05rem}
+    .checks li{margin:.4rem 0}
+    .checks li::before{content:"✔ ";color:var(--red)}
+    .stamp{display:inline-block;font-family:"Bangers",cursive;font-size:clamp(1.8rem,7vw,3rem);
+      color:var(--red);border:5px solid var(--red);border-radius:10px;padding:.2rem 1rem;
+      transform:rotate(-9deg);text-transform:uppercase;letter-spacing:.05em;
+      box-shadow:inset 0 0 0 3px rgba(229,53,43,.25)}
+
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .5s,transform .5s}
+    .reveal.in-view{opacity:1;transform:none}
+
+    footer{margin-top:2.5rem;font-weight:700;text-align:center;font-size:.85rem;opacity:.8}
+  </style>
 </head>
 <body>
-<div class="wrap">
+<div class="zine">
 
-  <header class="site">
-    <div class="kicker">DTU 02805 · Week 1</div>
-    <h1>Fame is unbounded, article length is not</h1>
-    <nav class="top">
-      <a href="../index.html">Home</a>
-      <a href="week1.html">Week 1</a>
-    </nav>
-    <p class="muted">Rakel Zander Ebdrup &amp; Jakob Kargo Mortensen · September 2026</p>
-  </header>
+  <nav class="comic-nav">
+    <a href="../index.html">◀ Home</a>
+    <a href="week1.html">Week 1</a>
+  </nav>
 
-  <h2>Research question</h2>
-  <p>
-    In the Marvel Wikipedia network a character's <strong>in-degree</strong> (how many other
-    articles link to it) reaches 106, while its <strong>out-degree</strong> (how many links its
-    own article carries) never passes 28. Is that gap a real property of how Wikipedia is
-    written &mdash; or just an artefact of how this dataset was scraped? We use it as a way to
-    ask <em>how the network was built</em>, and then we check the answer against a fresh rebuild
-    from the live Wikipedia.
-  </p>
+  <!-- 1. SPLASH -->
+  <section class="panel splash">
+    <h1 class="kapow">Fame is unbounded</h1>
+    <div class="sub">…article length is NOT</div>
+    <div class="vs">
+      <div class="num big">106<span class="lab">LINKS IN →</span></div>
+      <div class="num small">28<span class="lab">← LINKS OUT (max, ever)</span></div>
+    </div>
+    <div class="byline">Rakel Zander Ebdrup &amp; Jakob Kargo Mortensen · 02805 · Week 1</div>
+  </section>
 
-  <h2>Method</h2>
-  <ul>
-    <li><strong>Data.</strong> Week-1 frozen snapshot from the course data page: 303 character
-      nodes, 1&nbsp;784 directed edges (article A links to article B). Loaded with every node
-      added first, so the 17 isolates survive.</li>
-    <li><strong>Tools.</strong> NetworkX in- and out-degree over all 303 nodes; Spearman
-      correlation between them; the scatter below; degree distributions with logarithmic
-      binning.</li>
-    <li><strong>Reproduction check.</strong> For the 15 highest out-degree characters we rebuilt
-      their out-links straight from Wikipedia's live HTML (<code>action=parse</code>, navboxes /
-      infoboxes / tables stripped, links kept only inside paragraphs and list items) and scored
-      them against the snapshot.</li>
-    <li><strong>Reproduce.</strong> Notebooks <code>week1_distribution.ipynb</code> and
-      <code>week1_wiki_api_compare.ipynb</code>.</li>
-  </ul>
+  <!-- 2. FAME METER -->
+  <section class="panel reveal">
+    <h2 class="kapow">The Fame-o-Meter</h2>
+    <p class="lede">Blue = how many articles link <em>to</em> the character.
+      Orange = links inside the character's <em>own</em> article. Orange never crosses the wall.</p>
+    <div id="meter" class="meter"></div>
+    <div class="legend">
+      <span><span class="chip" style="background:var(--blue)"></span>links IN (fame)</span>
+      <span><span class="chip" style="background:var(--orange)"></span>links OUT (article length)</span>
+      <span style="color:var(--red)">┆ ceiling = 28</span>
+    </div>
+  </section>
 
-  <h2>The figure</h2>
-  <figure>
-    <img src="../assets/week1_indeg_vs_outdeg.png"
-         alt="Scatter of in-degree versus out-degree for all 303 Marvel characters; a dashed line marks the out-degree ceiling at 28">
-    <figcaption>
-      One point per character (jittered). The cloud drifts up and to the right &mdash; more
-      linked-to characters do have somewhat richer articles (Spearman&nbsp;&rho;&nbsp;=&nbsp;0.70)
-      &mdash; but out-degree runs into a hard ceiling at 28 (dashed line), while in-degree keeps
-      going. Spider-Man is linked to by 106 articles and links out to just 9.
-    </figcaption>
-  </figure>
+  <!-- 3. WHY -->
+  <section class="panel reveal">
+    <h2 class="kapow">Why the wall?</h2>
+    <div class="why">
+      <div class="bubble outlink">
+        <span class="em">✍️ ONE writer</span>
+        An out-link has to be typed into <b>this</b> page. You run out of article before you run
+        out of characters to mention. Hard cap ≈ 28.
+      </div>
+      <div class="bubble inlink">
+        <span class="em">🌐 EVERYONE else</span>
+        An in-link is a vote from any of the other 302 articles. Nobody coordinates it, nobody
+        stops it. Spider-Man just keeps collecting. Rich get richer.
+      </div>
+    </div>
+  </section>
 
-  <h3>Top characters by degree</h3>
-  <table>
-    <thead><tr><th>#</th><th>In-degree</th><th></th><th>Out-degree</th><th></th></tr></thead>
-    <tbody>
-      <tr><td>1</td><td>Spider-Man</td><td>106</td><td>Betsy Braddock</td><td>28</td></tr>
-      <tr><td>2</td><td>Hulk</td><td>64</td><td>Cloak and Dagger</td><td>24</td></tr>
-      <tr><td>3</td><td>Wolverine</td><td>60</td><td>Adam Warlock</td><td>22</td></tr>
-      <tr><td>4</td><td>Doctor Strange</td><td>50</td><td>Venom</td><td>21</td></tr>
-      <tr><td>5</td><td>Deadpool</td><td>33</td><td>She-Hulk</td><td>20</td></tr>
-    </tbody>
-  </table>
+  <!-- 4. THE LONELY -->
+  <section class="panel reveal">
+    <h2 class="kapow">The Lonely 17</h2>
+    <p class="lede">Seventeen &ldquo;superheroes&rdquo; that <b>no other article links to</b>
+      and that link to <b>nobody</b>. Hover to meet them.</p>
+    <div id="masks" class="masks"></div>
+    <div class="tiles">
+      <div class="tile"><div class="n">17</div><div class="t">total hermits</div></div>
+      <div class="tile"><div class="n">+41</div><div class="t">shout into the void<br>(link out, 0 links back)</div></div>
+      <div class="tile"><div class="n">58</div><div class="t">have in-degree 0<br>(19% of the roster)</div></div>
+    </div>
+  </section>
 
-  <h2>What we found</h2>
-  <ul>
-    <li><strong>The two degrees are related, but out-degree saturates.</strong>
-      Spearman&nbsp;&rho;&nbsp;=&nbsp;0.70 &mdash; prominent characters tend to have longer,
-      more cross-linked articles. Yet no article links out to more than 28 others, and the
-      busiest hubs are nowhere near the top: Spider-Man (in&nbsp;106) links out to 9,
-      Hulk (in&nbsp;64) to 10.</li>
-    <li><strong>Why the asymmetry.</strong> An out-link is written by <em>one</em> article's
-      editors and is bounded by how much prose that article has. An in-link is conferred by
-      <em>everyone else</em> &mdash; any of the other 302 articles can decide a character
-      matters &mdash; so in-degree has no ceiling and the well-known characters accumulate links
-      without limit (rich-get-richer; week 2 has a model of exactly this).</li>
-    <li><strong>58 forgotten characters</strong> have in-degree 0: 17 are true isolates (no
-      links either way), and 41 are &ldquo;sources&rdquo; &mdash; their own article links out,
-      but nobody links back.</li>
-    <li><strong>350 of the 1&nbsp;784 directed edges are reciprocated.</strong> Collapsing to
-      undirected pairs removes exactly those duplicates
-      (1&nbsp;784&nbsp;&minus;&nbsp;350&nbsp;=&nbsp;1&nbsp;434), giving a mean undirected degree
-      of <code>2m/n&nbsp;&approx;&nbsp;9.5</code>.</li>
-  </ul>
+  <!-- 5. MUTUALS -->
+  <section class="panel reveal" style="text-align:center">
+    <h2 class="kapow">350 mutual besties</h2>
+    <p style="font-family:'Bangers',cursive;font-size:clamp(2rem,10vw,3.6rem);margin:.4rem 0">
+      🦸 <span style="color:var(--red)">↔</span> 🦸
+    </p>
+    <p class="lede">350 pairs of characters link to <em>each other</em>. That's the whole reason
+      <b>1&nbsp;784 arrows</b> shrink to <b>1&nbsp;434 lines</b> when you forget direction
+      (average friend-count ≈ 9.5).</p>
+  </section>
 
-  <h2>Does it reproduce?</h2>
-  <p>
-    The surprising part &mdash; the out-degree ceiling &mdash; could easily be a scraping choice
-    rather than a fact about Wikipedia. So we rebuilt the out-links of the 15 busiest characters
-    directly from the live encyclopedia:
-  </p>
-  <ul>
-    <li>We recovered <strong>92.8&nbsp;%</strong> of the snapshot's edges with
-      <strong>100&nbsp;%</strong> precision &mdash; the &ldquo;body text, no navigation
-      templates&rdquo; rule invents no edges.</li>
-    <li>The highest reconstructed out-degree is still <strong>28</strong> (Betsy Braddock).
-      <em>The ceiling survives an independent rebuild</em> &mdash; it is in the encyclopedia,
-      not in the scraper.</li>
-    <li>The few edges we miss are in-prose character <em>tables</em> (e.g. Phoenix Force's list
-      of hosts), which our HTML filter strips. They would nudge a handful of out-degrees up by
-      one or two &mdash; not lift the cap.</li>
-    <li>The category itself has drifted from <strong>303 to 380</strong> pages since the
-      2026-08-26 freeze (3 removed, 80 added), so the snapshot is a curated slice, not
-      &ldquo;Wikipedia today&rdquo; &mdash; a good reason for every group to work from the same
-      frozen file.</li>
-  </ul>
+  <!-- 6. VERDICT -->
+  <section class="panel verdict reveal">
+    <h2 class="kapow" style="color:var(--ink)">But is it… real?</h2>
+    <p class="lede">The 28-wall could just be how <em>we</em> scraped it. So we rebuilt the busiest
+      characters' out-links straight from <b>live Wikipedia</b> and checked.</p>
+    <ul class="checks">
+      <li>92.8% of the original edges recovered</li>
+      <li>0 fake edges invented (precision 100%)</li>
+      <li>highest out-degree in the rebuild is <b>still 28</b></li>
+    </ul>
+    <div class="stamp">Verdict: legit</div>
+    <p class="tiny" style="margin-top:1rem">Small print: the Wikipedia category has grown
+      303 → 380 characters since the course froze the snapshot on 2026-08-26, so the roster is a
+      time capsule, not &ldquo;today&rdquo;. Full workings:
+      <code>week1_distribution.ipynb</code> + <code>week1_wiki_api_compare.ipynb</code>.</p>
+  </section>
 
-  <h2>Conclusion</h2>
-  <p>
-    In-degree and out-degree measure two different things. In-degree is <em>collective
-    editorial attention</em>: unbounded, heavy-tailed, hub-forming. Out-degree is <em>one
-    article's own scope</em>: bounded by how much its editors wrote, capped near 28. The
-    positive correlation just says popular characters also get longer articles &mdash; it does
-    not close the gap. And the reproduction check says this is a structural fact about how
-    Wikipedia is written, not a quirk of our data file.
-  </p>
-
-  <footer class="site">
-    <a href="../index.html">&larr; Back to home</a>
+  <footer>
+    <a href="../index.html">◀ back to home</a> · made with an LLM · no Marvel artwork was harmed
   </footer>
 
 </div>
+
+<script>
+const FAME = [
+  ["Spider-Man", 106, 9],
+  ["Hulk", 64, 10],
+  ["Wolverine", 60, 17],
+  ["Doctor Strange", 50, 17],
+  ["Deadpool", 33, 19],
+  ["She-Hulk", 29, 20],
+  ["Scarlet Witch", 28, 14],
+  ["Black Panther", 27, 11],
+];
+const ISOLATES = ["Baymax","Bird-Brain","Black Fox","Brain Drain","Breeze Barton",
+  "Captain Midlands","Charcoal","Father Time","Happy Sam Sawyer","Hellfire","Illuminator",
+  "Miracleman","Ogre","Sean and Chris","Solarman","Super Rabbit","Yo-Yo Rodriguez"];
+
+const MAXV = 106, CEIL = 28;
+
+const meter = document.getElementById("meter");
+const ceil = document.createElement("div");
+ceil.className = "ceiling";
+ceil.innerHTML = `<span>CEILING · 28</span>`;
+// the bar track starts after the 8.5rem label column + 0.5rem gap
+ceil.style.left = `calc((100% - 9rem) * ${CEIL / MAXV} + 9rem)`;
+meter.appendChild(ceil);
+
+FAME.forEach(([name, din, dout]) => {
+  const row = document.createElement("div");
+  row.className = "row";
+  row.innerHTML = `
+    <div class="who">${name}</div>
+    <div class="tracks">
+      <div class="bar in" data-w="${(din / MAXV) * 100}">
+        <b>${din}</b>${din === MAXV ? '<span class="burst">BOOM!</span>' : ''}</div>
+      <div class="bar out" data-w="${(dout / MAXV) * 100}"><b>${dout}</b></div>
+    </div>`;
+  meter.appendChild(row);
+});
+
+const masks = document.getElementById("masks");
+ISOLATES.forEach(n => {
+  const m = document.createElement("div");
+  m.className = "mask";
+  m.innerHTML = `<span class="nm">${n}</span>`;
+  masks.appendChild(m);
+});
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add("in-view");
+    e.target.querySelectorAll(".bar").forEach(b => { b.style.width = b.dataset.w + "%"; });
+    io.unobserve(e.target);
+  });
+}, { threshold: 0.25 });
+document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+</script>
 </body>
 </html>
