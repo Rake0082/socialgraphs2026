@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Week 1 — Fame is unbounded · 02805</title>
+  <title>Week 1 — Who's friends with who? · 02805</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
@@ -48,8 +48,8 @@
       padding:2.2rem 1rem;
     }
     .splash .kapow{font-size:clamp(2.4rem,8vw,4.2rem); text-shadow:4px 4px 0 var(--ink)}
-    .splash .sub{font-family:"Bangers",cursive;font-size:clamp(1.1rem,3.5vw,1.6rem);
-      color:var(--yellow);text-shadow:2px 2px 0 var(--ink);margin-top:.4rem}
+    .splash .sub{font-family:"Bangers",cursive;font-size:clamp(1.05rem,3.2vw,1.5rem);
+      line-height:1.15;color:var(--yellow);text-shadow:2px 2px 0 var(--ink);margin-top:.5rem}
     .byline{font-family:"Space Grotesk";font-weight:600;font-size:.8rem;opacity:.85;margin-top:1rem}
 
     .vs{display:flex;align-items:center;justify-content:center;gap:clamp(1rem,6vw,3rem);margin-top:1.4rem}
@@ -112,7 +112,10 @@
     .tile .t{font-size:.78rem;font-weight:700;opacity:.8}
 
     /* verdict */
-    .verdict{background:var(--yellow);color:var(--ink);text-align:center}
+    .verdict{background:var(--yellow);text-align:center}
+    .verdict,.verdict .lede,.verdict .checks,.verdict .tiny,.verdict h2{color:#1c1200}
+    .verdict .tiny{opacity:.85}
+    .verdict code{background:rgba(20,18,0,.12);border-color:rgba(20,18,0,.35);color:#1c1200}
     .checks{list-style:none;padding:0;margin:1rem 0;font-weight:700;font-size:1.05rem}
     .checks li{margin:.4rem 0}
     .checks li::before{content:"✔ ";color:var(--red)}
@@ -137,11 +140,11 @@
 
   <!-- 1. SPLASH -->
   <section class="panel splash">
-    <h1 class="kapow">Fame is unbounded</h1>
-    <div class="sub">…article length is NOT</div>
+    <h1 class="kapow">Who's friends with who?</h1>
+    <div class="sub">Discover the connections between the superheroes —<br>mutual links, like Rakel &amp; Jakob</div>
     <div class="vs">
-      <div class="num big">106<span class="lab">LINKS IN →</span></div>
-      <div class="num small">28<span class="lab">← LINKS OUT (max, ever)</span></div>
+      <div class="num big">106<span class="lab">SHOUT-OUTS IN →</span></div>
+      <div class="num small">28<span class="lab">← NAME-DROPS OUT (max, ever)</span></div>
     </div>
     <div class="byline">Rakel Zander Ebdrup &amp; Jakob Kargo Mortensen · 02805 · Week 1</div>
   </section>
@@ -189,15 +192,23 @@
     </div>
   </section>
 
-  <!-- 5. MUTUALS -->
+  <!-- 5. MUTUALS + FRIENDSHIP NETWORK -->
   <section class="panel reveal" style="text-align:center">
     <h2 class="kapow">350 mutual besties</h2>
-    <p style="font-family:'Bangers',cursive;font-size:clamp(2rem,10vw,3.6rem);margin:.4rem 0">
+    <p style="font-family:'Bangers',cursive;font-size:clamp(1.8rem,9vw,3.2rem);margin:.3rem 0">
       🦸 <span style="color:var(--red)">↔</span> 🦸
     </p>
-    <p class="lede">350 pairs of characters link to <em>each other</em>. That's the whole reason
-      <b>1&nbsp;784 arrows</b> shrink to <b>1&nbsp;434 lines</b> when you forget direction
-      (average friend-count ≈ 9.5).</p>
+    <p class="lede">Keep only the links that go <em>both</em> ways and you get the real
+      friendship network: <b>207 characters, 350 friendships</b>. One dense core — the X-Men
+      corner — with Wolverine as the most-connected of all (14 mutual friends).</p>
+    <figure style="margin:1rem 0 0">
+      <img src="../assets/week1_friendships.png"
+           alt="Network drawing of the 350 mutual friendships; Wolverine, She-Hulk, Cyclops and other X-Men sit in a dense central cluster"
+           style="border:3px solid var(--ink);border-radius:8px;background:#fff">
+      <figcaption class="tiny" style="margin-top:.4rem">Dot size &amp; colour = number of mutual
+        friends. This is also why <b>1&nbsp;784 arrows</b> collapse to <b>1&nbsp;434 lines</b>
+        when you drop direction (average friend-count ≈ 9.5).</figcaption>
+    </figure>
   </section>
 
   <!-- 6. VERDICT -->
